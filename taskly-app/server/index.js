@@ -1,14 +1,29 @@
-//main dependencies::::    npm install express express-graphql graphql mongoose cors --save  ///dev:  npm i -D nodemon dotenv
+// index.js
+const express = require('express');
+const mongoose = require('mongoose');
+const { graphqlHTTP } = require('express-graphql');
 
-const express = require("express");
-require("dotenv").config();
-
-const port = process.env.PORT || 5000;
+const schema = require('./graphql/schema'); // Define your GraphQL schema
 
 const app = express();
+const PORT = process.env.PORT || 5000;
 
-app.listen(
-  port,
-  console.log(`Server running on port http://localhost:${port}`)
-);
-//npm run dev
+
+app.use(express.json());
+
+// Connect to MongoDB
+mongoose.connect('mongodb://localhost/calendar', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
+
+mongoose.connection.once('open', () => {
+  console.log('Connected to MongoDB');
+});
+
+// Define your GraphQL endpoint
+app.use('/graphql', graphqlHTTP({ schema, graphiql: true }));
+
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
