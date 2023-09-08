@@ -1,0 +1,37 @@
+
+type User {
+  id: ID!
+  username: String!
+  email: String!
+  tasks: [Task!]!
+}
+
+type Task {
+  id: ID!
+  title: String!
+  description: String
+  dueDate: Date!
+  completed: Boolean!
+  user: User!
+}
+
+
+type Query {
+  user(id: ID!): User
+  userTasks(userId: ID!): [Task!]!
+}
+
+type Mutation {
+  createTask(input: TaskInput!): Task!
+  updateTask(id: ID!, input: TaskInput!): Task!
+  deleteTask(id: ID!): ID!
+}
+
+input TaskInput {
+  title: String!
+  description: String
+  dueDate: Date!
+  completed: Boolean!
+  userId: ID!
+}
+
